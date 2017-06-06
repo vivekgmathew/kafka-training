@@ -1,0 +1,60 @@
+kafka lets you decouple your data streams.
+
+Topic
+    is formed of multiple partitions. Its is a stream of data. we can have as many topics
+    as we want. topic is identified by its name. topics are splits into partitions.
+    data in the partitions are ordered. Each message within the partition gets an incremental
+    id called offset.
+
+Brokers
+    A kafka cluster consists of multiple brokers (servers). each brker is identified with its id.
+    After connecting to any broker(bootstrap broker you will be connected to entire cluster)
+
+
+Concept of leader for a partition.
+    At a time only a one broker can be a leader for that partition. only that reader can
+    receive and serve data for that partition.
+
+Producers
+    write data to topic. producers can chose to receive acknowledgment for data writes
+    ack 0 - producers wont wait for acknowledgement
+    ack 1 - producers will wait for leader acknowledgement
+    ack 2 - all => leader + replicas acknowledgement
+
+    producers can send a key with messages, if the key is sent then the producers has the guarantee that
+    all messages for that key will always go to the same partition. this enables guaranteed ordering for specific key.'
+
+Consumers
+    read data from the topic. messages are read serial inside the partition but they are read parallel across partitions
+
+Consumer Groups
+    each consumers within the groups are read from exclusive partitions. consumers inside the consumer group cannot read
+    from the same partitions.
+
+Consumer offsets
+    helps to resume the data read.
+
+Zookeeper
+    manages the brokers (keeps the list of them) and helps in leader election for the partitions.
+
+Delivery Semantics
+    at most once : offsets are committed as soon as the message is received. If the processing goes wrong the
+                  message will be lost.
+
+    at least once : offsets are committed after the message is processed. the can result in duplicate processing of messages
+
+    exactly once : very difficult to achieve
+
+          Landoop docker image for kafka
+
+    docker run --rm -it --net=host landoop/fast-data-dev  (run the docker image in interactive mode)
+
+    creating topics
+
+    kafka-topics --zookeeper 127.0.0.1:2181 --create --topic first_topic --partitions 3 --replication-factor 1
+
+
+
+
+
+
